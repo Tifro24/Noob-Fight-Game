@@ -19,16 +19,32 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 const gravity = 0.7
 
 class Sprite{
-    constructor({position, velocity}){
+    constructor({position, velocity, color = "red"}){
         this.position = position
         this.velocity = velocity
         this.height = 150
+        this.width = 50
         this.lastKey
+        this.attackBox = {
+            position: this.position,
+            width: 100,
+            height: 50
+        }
+        this.color = color
+        this.isAttacking
     }
     // Creating draw function, references position in constructor and x, y in object
     draw(){
-        c.fillStyle = 'red'
-        c.fillRect(this.position.x, this.position.y, 50, this.height)
+        c.fillStyle = this.color
+        c.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+        // attack box
+        c.fillStyle = "blue"
+        c.fillRect(
+            this.attackBox.position.x,
+            this.attackBox.position.y, 
+            this.attackBox.width, 
+            this.attackBox.height)
     }
 
     update(){
@@ -65,7 +81,9 @@ const enemy = new Sprite({
     velocity :{
     x: 0,
     y: 0   
-    }
+    },
+
+    color: "yellow"
 })
 
 
@@ -118,7 +136,16 @@ function animate(){
         enemy.velocity.x = 5
     }
     
-    
+    // detect for collision - if furthest side of attack box is >= enemy left side
+    if (
+        player.attackBox.position.x + player.attackBox.width >= enemy.position.x && 
+        player.attackBox.position.x <= enemy.position.x + enemy.width && 
+        player.attackBox.position.y <= enemy.position.y + enemy.height && 
+        player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
+        player.isAttacking)
+        {
+        console.log("lol")  
+    }
 }
 
 animate()
