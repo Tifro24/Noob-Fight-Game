@@ -36,6 +36,7 @@ class Sprite{
         }
         this.color = color
         this.isAttacking
+        this.health = 100
     }
     // Creating draw function, references position in constructor and x, y in object
     draw(){
@@ -174,7 +175,8 @@ function animate(){
         player.isAttacking) // player.isAttacking also needs to be true
         {
         player.isAttacking = false // this makes player hit only once and not multiple times
-        console.log("lol")
+        enemy.health -= 20
+        document.querySelector('#enemyHealth').style.width = enemy.health + '%'
           
     }
 
@@ -186,7 +188,8 @@ function animate(){
          enemy.isAttacking) // 
          {
          enemy.isAttacking = false // this makes player hit only once and not multiple times
-         console.log("enemy hit")
+         player.health -= 20
+         document.querySelector('#playerHealth').style.width = player.health + '%'
            
      }
 }
@@ -223,7 +226,7 @@ switch(event.key){
         enemy.velocity.y = -20
         break
     case "ArrowDown":
-        enemy.isAttacking = true
+        enemy.attack()
 }
 
 } )

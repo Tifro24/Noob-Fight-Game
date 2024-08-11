@@ -5,8 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script defer src="index.js"></script>
     <title>Noob Fight</title>
+    <!-- some css to make the box-sizing border box, necessary-->
+    <style>
+        *{
+            box-sizing: border-box; 
+        }
+    </style>
 </head>
 <body>
-    <canvas></canvas>
+    <!-- container div (for whole canvas)-->
+    <div style="position: relative; display: inline-block;"> <!-- inline-block makes it so that it takes up only what the children elements take up. So before this it took up the whole screen but now it only takes up the size of the canvas. Not the other div however since it is absolute.-->
+        <!-- container for player, enemy health and timer-->
+        <div style=
+        "position: absolute; 
+        display: flex; 
+        width: 100%; 
+        align-items: center ;
+        padding: 20px;"> <!-- Absolute means it's dimensions and qualities are unaffected by other elements-->
+            <!-- player health-->
+            <div style="position: relative; height: 30px; width: 100%; display: flex; justify-content: flex-end;"> <!-- flex end makes it so that health bar flips and starts decreasing from left to right as opposed to right to left (it was the other way originally)-->
+                <div style="background-color: yellow; height: 30px; width: 100%;"></div>
+                <div id="playerHealth" style="position: absolute; background-color: blue; top: 0; bottom: 0; right: 0; width: 100%;"></div>
+            </div>
+            <!-- timer-->
+            <div style="background-color: red; height: 100px; width: 100px; flex-shrink: 0;"></div>
+            <!-- enemy health-->
+            <div style="position: relative; height: 30px; width: 100%;">
+                <div style="background-color: yellow; height: 30px;"></div>
+                <div id="enemyHealth" style="position: absolute; background-color: blue; top: 0; bottom: 0; right: 0; left: 0;"></div>
+            </div>
+        </div>
+        <canvas></canvas>
+    </div>
 </body>
 </html>
