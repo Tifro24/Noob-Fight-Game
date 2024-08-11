@@ -19,14 +19,18 @@ c.fillRect(0, 0, canvas.width, canvas.height)
 const gravity = 0.7
 
 class Sprite{
-    constructor({position, velocity, color = "red"}){
+    constructor({position, velocity, color = "red", offset}){
         this.position = position
         this.velocity = velocity
         this.height = 150
         this.width = 50
         this.lastKey
         this.attackBox = {
-            position: this.position,
+            position:{
+                x: this.position.x, // makes it so that attack box isn't entirely dependent on parent (player/enemy) position - can be slightly altered
+                y: this.position.y
+            },
+            offset: offset, // could also do just offset as they have the same name (shorthand)
             width: 100,
             height: 50
         }
@@ -39,16 +43,21 @@ class Sprite{
         c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
         // attack box
-        c.fillStyle = "blue"
-        c.fillRect(
+        if(this.isAttacking){ // if statement to make it so that attack box only shows when is attacking is true
+            c.fillStyle = "blue"
+            c.fillRect(
             this.attackBox.position.x,
             this.attackBox.position.y, 
             this.attackBox.width, 
             this.attackBox.height)
+        }
+        
     }
 
     update(){
      this.draw()
+     this.attackBox.position.x = this.position.x + this.attackBox.offset.x
+     this.attackBox.position.y = this.position.y
      this.position.y += this.velocity.y
      this.position.x += this.velocity.x
 
@@ -56,8 +65,15 @@ class Sprite{
         this.velocity.y = 0
      } else this.velocity.y += gravity // means gravity only works if our players are on screen/above the "floor"
     }
-    
+
+    attack() {
+        this.isAttacking = true // function fired, attacking is true
+        setTimeout( () => {
+           this.isAttacking = false // use set time out to turn it false after 100 milliseconds
+        }, 100)}
 }
+
+
 
 const player = new Sprite({
     position: {
@@ -68,6 +84,10 @@ const player = new Sprite({
     velocity :{
     x: 0,
     y: 0   
+    },
+    offset: {
+        x:0,
+        y:0
     }
 })
 
@@ -83,7 +103,11 @@ const enemy = new Sprite({
     y: 0   
     },
 
-    color: "yellow"
+    color: "yellow",
+    offset: { // we can now change enemy's attack box to face player
+        x:-50,
+        y:0
+    }
 })
 
 
@@ -104,10 +128,15 @@ const keys = {
     ArrowLeft: {
         pressed: false
     }
-    
-    
 
     
+}
+
+function rectangularCollision({rectangle1, rectangle2}) {
+       return(rectangle1.attackBox.position.x + rectangle1.attackBox.width >= rectangle2.position.x && 
+        rectangle1.attackBox.position.x <= rectangle2.position.x + rectangle2.width && 
+        rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height && 
+        rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y)
 }
 // that window call basically loops whatever function is put into it, almost like a recursive function
 // Created this variable so that the last key that was pressed has 'priority' and thus it's command will fire. 
@@ -138,14 +167,28 @@ function animate(){
     
     // detect for collision - if furthest side of attack box is >= enemy left side
     if (
-        player.attackBox.position.x + player.attackBox.width >= enemy.position.x && 
-        player.attackBox.position.x <= enemy.position.x + enemy.width && 
-        player.attackBox.position.y <= enemy.position.y + enemy.height && 
-        player.attackBox.position.y + player.attackBox.height >= enemy.position.y &&
-        player.isAttacking)
+       rectangularCollision({ //made a function so that collision can be detected for both player and enemy without having to repeat the code
+        rectangle1: player,
+        rectangle2: enemy
+       }) &&
+        player.isAttacking) // player.isAttacking also needs to be true
         {
-        console.log("lol")  
+        player.isAttacking = false // this makes player hit only once and not multiple times
+        console.log("lol")
+          
     }
+
+    if (
+        rectangularCollision({ //enemy collision detection - swapped rectangles
+         rectangle1: enemy,
+         rectangle2: player
+        }) &&
+         enemy.isAttacking) // 
+         {
+         enemy.isAttacking = false // this makes player hit only once and not multiple times
+         console.log("enemy hit")
+           
+     }
 }
 
 animate()
@@ -164,6 +207,9 @@ switch(event.key){
     case "w":
         player.velocity.y = -20
         break
+    case " ":
+        player.attack()
+        break
 
     case "ArrowRight":
         keys.ArrowRight.pressed = true
@@ -176,8 +222,10 @@ switch(event.key){
     case "ArrowUp":
         enemy.velocity.y = -20
         break
+    case "ArrowDown":
+        enemy.isAttacking = true
 }
-console.log(event.key)
+
 } )
 
 window.addEventListener('keyup', (event) =>{
@@ -199,6 +247,6 @@ window.addEventListener('keyup', (event) =>{
             break
         
     }
-    console.log(event.key)
+    
     } )
 
