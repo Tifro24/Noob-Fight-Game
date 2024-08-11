@@ -139,6 +139,36 @@ function rectangularCollision({rectangle1, rectangle2}) {
         rectangle1.attackBox.position.y <= rectangle2.position.y + rectangle2.height && 
         rectangle1.attackBox.position.y + rectangle1.attackBox.height >= rectangle2.position.y)
 }
+
+function determineWinner({player, enemy, timerID}){
+    clearTimeout(timerID)
+     document.querySelector('#displayText').style.display = 'flex'
+        if(player.health === enemy.health){
+            document.querySelector('#displayText').innerHTML = 'Tie' 
+        } else if(player.health > enemy.health){
+            document.querySelector('#displayText').innerHTML = 'Player 1 Wins' 
+        } else{
+            document.querySelector('#displayText').innerHTML = 'Player 2 Wins'
+        }
+    }
+
+
+let timer = 10
+let timerID
+function decreaseTimer(){
+    if(timer>0){
+        timerID = setTimeout(decreaseTimer, 1000)
+        timer--
+        document.querySelector('#timer').innerHTML = timer }
+    
+        if(timer === 0){
+        determineWinner({player,enemy,timerID})
+    }
+}
+
+decreaseTimer()
+
+
 // that window call basically loops whatever function is put into it, almost like a recursive function
 // Created this variable so that the last key that was pressed has 'priority' and thus it's command will fire. 
 
@@ -191,6 +221,13 @@ function animate(){
          player.health -= 20
          document.querySelector('#playerHealth').style.width = player.health + '%'
            
+     }
+
+     // end game based on health
+
+     if (enemy.health <= 0 || player.health <= 0){
+        determineWinner({player,enemy, timerID})
+
      }
 }
 
