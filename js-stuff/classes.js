@@ -50,7 +50,7 @@ class Sprite{
 
 
 class Fighter extends Sprite{ // extends takes all properties from sprite and puts them in fighter class if not available
-    constructor({position, velocity, color = "red", imageSrc, scale = 1, framesMax = 1, offset = {x:0, y:0}, sprites}){
+    constructor({position, velocity, color = "red", imageSrc, scale = 1, framesMax = 1, offset = {x:0, y:0}, sprites, attackBox = { offset: {}, width: undefined, height: undefined}}){
         
         super({position, imageSrc, scale, framesMax, offset})
         
@@ -64,9 +64,9 @@ class Fighter extends Sprite{ // extends takes all properties from sprite and pu
                 x: this.position.x, // makes it so that attack box isn't entirely dependent on parent (player/enemy) position - can be slightly altered
                 y: this.position.y
             },
-            offset: offset, // could also do just offset as they have the same name (shorthand)
-            width: 100,
-            height: 50
+            offset: attackBox.offset, // could also do just offset as they have the same name (shorthand)
+            width: attackBox.width,
+            height: attackBox.height
         }
         this.color = color
         this.isAttacking
@@ -89,7 +89,11 @@ class Fighter extends Sprite{ // extends takes all properties from sprite and pu
      this.draw()
      this.animateFrames()
      this.attackBox.position.x = this.position.x + this.attackBox.offset.x
-     this.attackBox.position.y = this.position.y
+     this.attackBox.position.y = this.position.y + this.attackBox.offset.y
+
+    // how we draw attack box, not needed anymore
+    // c.fillRect(this.attackBox.position.x,this.attackBox.position.y, this.attackBox.width, this.attackBox.height)
+
      this.position.y += this.velocity.y
      this.position.x += this.velocity.x
 
@@ -101,10 +105,10 @@ class Fighter extends Sprite{ // extends takes all properties from sprite and pu
 
     attack() {
         this.switchSprite('attack1')
-        this.isAttacking = true // function fired, attacking is true
-        setTimeout( () => {
-           this.isAttacking = false // use set time out to turn it false after 100 milliseconds
-        }, 100)}
+        this.isAttacking = true} // function fired, attacking is true
+       // setTimeout( () => { - got rid of setTimeout as it's affecting desired response of health dropping after fourth frame of attack animation
+          // this.isAttacking = false // use set time out to turn it false after 100 milliseconds
+       // }, 100)}
 
     switchSprite(sprite){
         if(this.image == this.sprites.attack1.image  // we don't want switch case called when we attack, so attack animation can play out fully

@@ -78,6 +78,14 @@ const player = new Fighter({
             imageSrc :'./img/samuraiMack/Attack1.png',
             framesMax: 6
         }
+    },
+    attackBox :{
+        offset:{
+            x:70,
+            y:50 // this offset affects where our attack box is - if this makes contact with enemy when pressing attack, health will deplete
+        },
+        width: 180,
+        height: 50
     }
 })
 
@@ -127,7 +135,15 @@ const enemy = new Fighter({
         attack1 : {
             imageSrc :'./img/kenji/Attack1.png',
             framesMax: 4
-        }}
+        }},
+        attackBox :{
+            offset:{
+                x:-172,
+                y:50
+            },
+            width: 172,
+            height: 50
+        }
 
     
 })
@@ -217,7 +233,7 @@ function animate(){
         rectangle1: player,
         rectangle2: enemy
        }) &&
-        player.isAttacking) // player.isAttacking also needs to be true
+        player.isAttacking && player.framesCurrent == 4) // player.isAttacking also needs to be true
         {
         player.isAttacking = false // this makes player hit only once and not multiple times
         enemy.health -= 20
@@ -225,18 +241,29 @@ function animate(){
           
     }
 
+    // if player misses - sets is attacking back to false unlike the above where it only does this upon collision. 
+
+    if (player.isAttacking && player.framesCurrent == 4){
+        player.isAttacking = false
+    }
+
     if (
         rectangularCollision({ //enemy collision detection - swapped rectangles
          rectangle1: enemy,
          rectangle2: player
         }) &&
-         enemy.isAttacking) // 
+         enemy.isAttacking && enemy.framesCurrent == 2) // 
          {
          enemy.isAttacking = false // this makes player hit only once and not multiple times
          player.health -= 20
          document.querySelector('#playerHealth').style.width = player.health + '%'
            
      }
+
+        // if enemy misses
+     if (enemy.isAttacking && enemy.framesCurrent == 2){
+        enemy.isAttacking = false
+    }
 
      // end game based on health
 
