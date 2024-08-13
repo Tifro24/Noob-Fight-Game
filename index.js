@@ -26,6 +26,15 @@ const background = new Sprite({
     imageSrc: './img/background.png' // our bg or sprite class takes a position and image source so we input both here
 })
 
+const shop = new Sprite({
+    position: {
+        x:600,
+        y:128
+    },
+    imageSrc: './img/shop.png',  // our bg or sprite class takes a position and image source so we input both here
+    scale: 2.75,
+    framesMax : 6
+})
 
 const player = new Fighter({
     position: {
@@ -40,7 +49,10 @@ const player = new Fighter({
     offset: {
         x:0,
         y:0
-    }
+    },
+    imageSrc:'./img/samuraiMack/Idle.png',
+    framesMax: 8, // frames = how many frames/images in the image
+    scale: 2.5
 })
 
 
@@ -60,6 +72,7 @@ const enemy = new Fighter({
         x:-50,
         y:0
     }
+    
 })
 
 
@@ -96,6 +109,7 @@ function animate(){
     c.fillStyle = 'black' // keeps our bg color as is
     c.fillRect(0,0, canvas.width, canvas.height) // Keeps our background as is
     background.update() // we want our bg image in the back so has to be rendered first.
+    shop.update()
     player.update() // as we have our draw function in our update, we no longer need to call it separately.
     enemy.update()
 

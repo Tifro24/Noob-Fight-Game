@@ -18,7 +18,7 @@ function determineWinner({player, enemy, timerID}){
  }
 
 
-let timer = 10
+let timer = 60
 let timerID
 function decreaseTimer(){
  if(timer>0){
@@ -30,3 +30,22 @@ function decreaseTimer(){
      determineWinner({player,enemy,timerID})
  }
 }
+
+
+// got rid of below as our players are no longer rectangles, but wanted to keep the code for understanding purposes.
+
+// draw(){
+//     c.fillStyle = this.color
+//     c.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+//     // attack box
+//     if(this.isAttacking){ // if statement to make it so that attack box only shows when is attacking is true
+//         c.fillStyle = "blue"
+//         c.fillRect(
+//         this.attackBox.position.x,
+//         this.attackBox.position.y, 
+//         this.attackBox.width, 
+//         this.attackBox.height)
+//     }
+    
+// }

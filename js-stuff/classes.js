@@ -1,28 +1,54 @@
 
 class Sprite{
-    constructor({position, imageSrc}){
+    constructor({position, imageSrc, scale = 1, framesMax = 1}){
         this.position = position
         this.height = 150
         this.width = 50
         this.image = new Image()
         this.image.src = imageSrc
+        this.scale = scale
+        this.framesMax = framesMax
+        this.framesCurrent = 0 // the more we add to our frames current, the more the crop shape shifts to the next frame.
+        this.framesElapsed = 0 // how many frames have we currrently elapsed over throughout or whole animation.
+        this.framesHold = 7 // how many frames should we actually go through before changing frames current
        
     }
     
     draw(){
-        c.drawImage(this.image, this.position.x, this.position.y)    
+        c.drawImage(this.image,
+            this.framesCurrent * (this.image.width / this.framesMax), //crop location, below is crop width and height. We use the x property to shift our crop 'shape'  over to the next image, however it does the same with the bg, so we need to implement a current frame.
+            0,
+            this.image.width / this.framesMax,
+            this.image.height,
+            // the above is how we crop the specific frame we need
+
+            this.position.x,
+            this.position.y,
+            (this.image.width / this.framesMax) * this.scale, //this has to be adjusted to as we want only a 6th of the width of our shop image. Changed it to a argument so it doesn't affect background too.
+            this.image.height * this.scale) //this.image.width makes it so that the properties match the width and height of the respective image. This.scale is so that we can multiply it and scale it up if need be.  
     }
 
     update(){
      this.draw()
+     this.framesElapsed++
+     if(this.framesElapsed % this.framesHold === 0){ 
+        if (this.framesCurrent < this.framesMax - 1){
+            this.framesCurrent++
+        } else{
+            this.framesCurrent = 0
+        }
     }
+}
 
  
 }
 
 
-class Fighter{
-    constructor({position, velocity, color = "red", offset}){
+class Fighter extends Sprite{ // extends takes all properties from sprite and puts them in fighter class if not available
+    constructor({position, velocity, color = "red", offset, imageSrc, scale = 1, framesMax = 1}){
+        
+        super({position, imageSrc, scale, framesMax})
+        
         this.position = position
         this.velocity = velocity
         this.height = 150
@@ -40,23 +66,12 @@ class Fighter{
         this.color = color
         this.isAttacking
         this.health = 100
+        this.framesCurrent = 0
+        this.framesElapsed = 0
+        this.framesHold = 5 //moved these frame variants here apart from framesMax as it is passed through in the object above.
     }
     // Creating draw function, references position in constructor and x, y in object
-    draw(){
-        c.fillStyle = this.color
-        c.fillRect(this.position.x, this.position.y, this.width, this.height)
-
-        // attack box
-        if(this.isAttacking){ // if statement to make it so that attack box only shows when is attacking is true
-            c.fillStyle = "blue"
-            c.fillRect(
-            this.attackBox.position.x,
-            this.attackBox.position.y, 
-            this.attackBox.width, 
-            this.attackBox.height)
-        }
-        
-    }
+ 
 
     update(){
      this.draw()
