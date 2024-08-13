@@ -52,8 +52,36 @@ const player = new Fighter({
     },
     imageSrc:'./img/samuraiMack/Idle.png',
     framesMax: 8, // frames = how many frames/images in the image
-    scale: 2.5
+    scale: 2.5,
+    offset: {
+        x: 215,
+        y: 156
+    },
+    sprites:{ // this is so that we can loop through the different sprites in this object.
+        idle: {
+            imageSrc :'./img/samuraiMack/Idle.png',
+            framesMax: 8,
+        },
+        run: {
+            imageSrc :'./img/samuraiMack/Run.png',
+            framesMax: 8
+        },
+        jump: {
+            imageSrc :'./img/samuraiMack/Jump.png',
+            framesMax: 2
+        },
+        fall : {
+            imageSrc :'./img/samuraiMack/Fall.png',
+            framesMax: 2
+        },
+        attack1 : {
+            imageSrc :'./img/samuraiMack/Attack1.png',
+            framesMax: 6
+        }
+    }
 })
+
+console.log(player)
 
 
 const enemy = new Fighter({
@@ -111,16 +139,28 @@ function animate(){
     background.update() // we want our bg image in the back so has to be rendered first.
     shop.update()
     player.update() // as we have our draw function in our update, we no longer need to call it separately.
-    enemy.update()
+   // enemy.update()
 
     player.velocity.x = 0
     enemy.velocity.x = 0
 
     // player movement
+    
     if (keys.a.pressed && player.lastKey === 'a'){
         player.velocity.x = -5
+        player.switchSprite('run') //  when we press either a or d our sprite image changes to the run png
     } else if (keys.d.pressed && player.lastKey === 'd'){
         player.velocity.x = 5
+        player.switchSprite('run')
+    } else{
+        player.switchSprite('idle') // makes it so that our default is idle
+    }
+    
+    // player jumping
+    if (player.velocity.y < 0){
+        player.switchSprite('jump')
+    } else if (player.velocity.y > 0){
+        player.switchSprite('fall')
     }
 
     // enemy movement
