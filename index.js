@@ -199,6 +199,8 @@ function animate(){
     c.fillRect(0,0, canvas.width, canvas.height) // Keeps our background as is
     background.update() // we want our bg image in the back so has to be rendered first.
     shop.update()
+    c.fillStyle = 'rgba(255,255,255, 0.10)'
+    c.fillRect(0, 0, canvas.width, canvas.height)
     player.update() // as we have our draw function in our update, we no longer need to call it separately.
     enemy.update()
 
@@ -254,7 +256,10 @@ function animate(){
         enemy.takeHit()
         player.isAttacking = false // this makes player hit only once and not multiple times
         
-        document.querySelector('#enemyHealth').style.width = enemy.health + '%'
+
+        gsap.to('#enemyHealth', {
+            width: enemy.health + '%'
+        })
           
     }
 
@@ -273,7 +278,10 @@ function animate(){
          {
          enemy.isAttacking = false // this makes player hit only once and not multiple times
          player.takeHit()
-         document.querySelector('#playerHealth').style.width = player.health + '%'
+         
+         gsap.to('#playerHealth', {
+            width: player.health + '%'
+        }) // we use gsap for a smoother animation on health decrease
            
      }
 
