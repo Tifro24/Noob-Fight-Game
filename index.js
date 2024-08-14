@@ -77,7 +77,15 @@ const player = new Fighter({
         attack1 : {
             imageSrc :'./img/samuraiMack/Attack1.png',
             framesMax: 6
-        }
+        },
+        takeHit: {
+            imageSrc:'./img/samuraiMack/Take Hit - white silhouette.png',
+            framesMax: 4
+        },
+        death: {
+            imageSrc:'./img/samuraiMack/Death.png',
+            framesMax: 6
+        } 
     },
     attackBox :{
         offset:{
@@ -135,7 +143,15 @@ const enemy = new Fighter({
         attack1 : {
             imageSrc :'./img/kenji/Attack1.png',
             framesMax: 4
-        }},
+        },
+        takeHit: {
+            imageSrc:'./img/kenji/Take Hit.png',
+            framesMax: 3
+        } ,
+        death: {
+            imageSrc:'./img/kenji/Death.png',
+            framesMax: 7
+        }   },
         attackBox :{
             offset:{
                 x:-172,
@@ -235,8 +251,9 @@ function animate(){
        }) &&
         player.isAttacking && player.framesCurrent == 4) // player.isAttacking also needs to be true
         {
+        enemy.takeHit()
         player.isAttacking = false // this makes player hit only once and not multiple times
-        enemy.health -= 20
+        
         document.querySelector('#enemyHealth').style.width = enemy.health + '%'
           
     }
@@ -255,7 +272,7 @@ function animate(){
          enemy.isAttacking && enemy.framesCurrent == 2) // 
          {
          enemy.isAttacking = false // this makes player hit only once and not multiple times
-         player.health -= 20
+         player.takeHit()
          document.querySelector('#playerHealth').style.width = player.health + '%'
            
      }
@@ -276,37 +293,41 @@ function animate(){
 animate()
 
 window.addEventListener('keydown', (event) =>{
+if(!player.dead){
+    switch(event.key){
+        case "d":
+            keys.d.pressed = true
+            player.lastKey = 'd'
+            break
+        case "a":
+            keys.a.pressed = true
+            player.lastKey = 'a'
+            break
+        case "w":
+            player.velocity.y = -20
+            break
+        case " ":
+            player.attack()
+            break}}
     
-switch(event.key){
-    case "d":
-        keys.d.pressed = true
-        player.lastKey = 'd'
-        break
-    case "a":
-        keys.a.pressed = true
-        player.lastKey = 'a'
-        break
-    case "w":
-        player.velocity.y = -20
-        break
-    case " ":
-        player.attack()
-        break
-
-    case "ArrowRight":
-        keys.ArrowRight.pressed = true
-        enemy.lastKey = 'ArrowRight'
-        break
-    case "ArrowLeft":
-        keys.ArrowLeft.pressed = true
-        enemy.lastKey = 'ArrowLeft'
-        break
-    case "ArrowUp":
-        enemy.velocity.y = -20
-        break
-    case "ArrowDown":
-        enemy.attack()
+if(!enemy.dead){   
+    switch(event.key){
+        case "ArrowRight":
+            keys.ArrowRight.pressed = true
+            enemy.lastKey = 'ArrowRight'
+            break
+        case "ArrowLeft":
+            keys.ArrowLeft.pressed = true
+            enemy.lastKey = 'ArrowLeft'
+            break
+        case "ArrowUp":
+            enemy.velocity.y = -20
+            break
+        case "ArrowDown":
+            enemy.attack()
+    }
 }
+
 
 } )
 

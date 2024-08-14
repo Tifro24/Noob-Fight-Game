@@ -26,17 +26,17 @@
         padding: 20px;"> <!-- Absolute means it's dimensions and qualities are unaffected by other elements-->
             <!-- player health-->
             <div style="position: relative; height: 30px; width: 100%; display: flex; justify-content: flex-end;"> <!-- flex end makes it so that health bar flips and starts decreasing from left to right as opposed to right to left (it was the other way originally)-->
-                <div style="background-color: yellow; height: 30px; width: 100%;"></div>
-                <div id="playerHealth" style="position: absolute; background-color: blue; top: 0; bottom: 0; right: 0; width: 100%;"></div>
+                <div style="background-color: red; height: 30px; width: 100%;"></div>
+                <div id="playerHealth" style="position: absolute; background-color: #6d28d9; top: 0; bottom: 0; right: 0; width: 100%;"></div>
             </div>
             <!-- timer-->
-            <div id="timer" style="background-color: red; height: 100px; width: 100px; flex-shrink: 0; display: flex; justify-content: center; align-items: center;">
+            <div id="timer" style="background-color: black; height: 50px; width: 100px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; color: white;">
                 10
             </div>
             <!-- enemy health-->
             <div style="position: relative; height: 30px; width: 100%;">
-                <div style="background-color: yellow; height: 30px;"></div>
-                <div id="enemyHealth" style="position: absolute; background-color: blue; top: 0; bottom: 0; right: 0; left: 0;"></div>
+                <div style="background-color: red; height: 30px;"></div>
+                <div id="enemyHealth" style="position: absolute; background-color: #6d28d9; top: 0; bottom: 0; right: 0; left: 0;"></div>
             </div>
         </div>
         <div id="displayText" style="position: absolute; color: white; display: none; justify-content: center; align-items: center; top: 0; bottom: 0; right: 0; left: 0;">Tie</div>
